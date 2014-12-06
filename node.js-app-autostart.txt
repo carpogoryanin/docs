@@ -2,6 +2,9 @@
 description "nodeapp"
 author      "yoursuperteam"
 
+#put this script to /etc/init/nodeapp.conf
+
+
 #you can start/stop node-app after some process, for example couchdb:
 start on started couchdb
 stop on stopped couchdb
