@@ -1,0 +1,31 @@
+#!upstart
+description "nodeapp"
+author      "yoursuperteam"
+
+#you can start/stop node-app after some process, for example couchdb:
+start on started couchdb
+stop on stopped couchdb
+
+respawn
+respawn limit 10 5
+
+env APP="/home/yourname/nodeapp/app.js"
+env APPDIR="/home/yourname/nodeapp/"
+env LOG="/home/yourname/nodeapp/log/app.log"
+
+pre-start script
+   # Date format same as (new Date()).toISOString() for consistency
+    echo "[`date -u +%Y-%m-%dT%T.%3NZ`] (sys) Starting" >> $LOG
+end script
+
+script
+    chdir $APPDIR
+    echo $$ > /var/run/nodeapp.pid
+    exec sudo node $APP >> $LOG 2>&1
+end script
+
+
+pre-stop script
+    rm /var/run/nodeapp.pid
+    echo "[`date -u +%Y-%m-%dT%T.%3NZ`] (sys) Stopping" >> $LOG
+end script
